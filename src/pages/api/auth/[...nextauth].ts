@@ -20,7 +20,7 @@ export default NextAuth({
 
                     console.log('API response:', response.data);
 
-                    if (response.data) {
+                    if (response.data.token) {
                         return {
                             id: response.data.userId,
                             name: response.data.username,
@@ -31,7 +31,7 @@ export default NextAuth({
                         return null;
                     }
                 } catch (error) {
-                    console.error('Login error:', error.response?.data || error.message);
+                    console.error('Login error:', error);
                     return null;
                 }
             }

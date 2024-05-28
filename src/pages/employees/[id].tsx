@@ -1,13 +1,28 @@
 import withAuth from '../../components/withAuth';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { getEmployeeById, updateEmployee, getAllDepartments } from '../../services/employeeService';
-import { Box, Button, Card, CardContent, CardMedia, MenuItem, Select, Typography, Table, TableBody, TableCell, TableHead, TableRow, SelectChangeEvent } from '@mui/material';
-import { format } from 'date-fns';
+import {useRouter} from 'next/router';
+import React, {useEffect, useState} from 'react';
+import {getAllDepartments, getEmployeeById, updateEmployee} from '../../services/employeeService';
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CardMedia,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
+    Typography
+} from '@mui/material';
+import {format} from 'date-fns';
 
 const EmployeeDetails: React.FC = () => {
     const router = useRouter();
-    const { id } = router.query;
+    const {id} = router.query;
     const [employee, setEmployee] = useState<any>(null);
     const [departments, setDepartments] = useState([]);
     const [selectedDepartment, setSelectedDepartment] = useState<number>(0);
@@ -35,7 +50,7 @@ const EmployeeDetails: React.FC = () => {
 
     const handleUpdate = async () => {
         if (employee && selectedDepartment !== null) {
-            await updateEmployee(employee.employeeId, { ...employee, departmentId: selectedDepartment });
+            await updateEmployee(employee.employeeId, {...employee, departmentId: selectedDepartment});
             setIsChanged(false);
         }
     };
@@ -45,16 +60,16 @@ const EmployeeDetails: React.FC = () => {
     }
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: 2 }}>
-            <Card sx={{ display: 'flex', width: '100%', maxWidth: 600 }}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: 2}}>
+            <Card sx={{display: 'flex', width: '100%', maxWidth: 600}}>
                 <CardMedia
                     component="img"
-                    sx={{ width: 151 }}
+                    sx={{width: 151}}
                     image="/path/to/avatar/image"
                     alt="Employee Avatar"
                 />
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <CardContent sx={{ flex: '1 0 auto' }}>
+                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                    <CardContent sx={{flex: '1 0 auto'}}>
                         <Typography component="div" variant="h5">
                             {employee.firstName} {employee.lastName}
                         </Typography>
@@ -75,13 +90,13 @@ const EmployeeDetails: React.FC = () => {
                         </Typography>
                     </CardContent>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingRight: 2 }}>
+                <Box sx={{display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingRight: 2}}>
                     <Button variant="contained" color={employee.isActive ? 'error' : 'success'}>
                         {employee.isActive ? 'Deactivate' : 'Activate'}
                     </Button>
                 </Box>
             </Card>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                 <Select value={selectedDepartment} onChange={handleDepartmentChange}>
                     {departments.map((dept: any) => (
                         <MenuItem key={dept.departmentId} value={dept.departmentId}>
@@ -93,7 +108,7 @@ const EmployeeDetails: React.FC = () => {
                     Update
                 </Button>
             </Box>
-            <Box sx={{ width: '100%', maxWidth: 600 }}>
+            <Box sx={{width: '100%', maxWidth: 600}}>
                 <Typography variant="h6" gutterBottom>
                     Department History
                 </Typography>
@@ -105,7 +120,7 @@ const EmployeeDetails: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {departmentHistory.map((history: any) => (
+                        {departmentHistory && departmentHistory.length && departmentHistory.map((history: any) => (
                             <TableRow key={history.departmentHistoryId}>
                                 <TableCell>{format(new Date(history.startDate), 'MM/dd/yyyy')}</TableCell>
                                 <TableCell>{history.department.name}</TableCell>

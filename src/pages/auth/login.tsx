@@ -13,9 +13,12 @@ export default function Login() {
         try {
             e.preventDefault();
             const result = await signIn('credentials', {
+                redirect: false,
                 username,
                 password
             });
+
+            console.log('signIn result:', result);
 
             if (result?.ok) {
                 router.push('/employees');
@@ -24,10 +27,8 @@ export default function Login() {
                 setError('Invalid username or password');
             }
         } catch (e) {
-            console.log(e)
+            console.error('Login error:', e);
         }
-
-
     };
 
     return (
