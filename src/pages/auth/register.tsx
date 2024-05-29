@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { register } from '../../services/authService';
-import { Button, TextField, Container, Box, Typography } from '@mui/material';
+import {useState} from 'react';
+import {useRouter} from 'next/router';
+import {register} from '../../services/authService';
+import {Box, Button, Container, TextField, Typography} from '@mui/material';
 
 export default function Register() {
     const [username, setUsername] = useState('');
@@ -15,13 +15,12 @@ export default function Register() {
             router.push('/auth/login');
         } catch (error) {
             console.error('Registration failed', error);
-            // Handle registration error (e.g., display a message)
         }
     };
 
     return (
         <Container>
-            <Box sx={{ textAlign: 'center', marginTop: 8 }}>
+            <Box sx={{textAlign: 'center', marginTop: 8}}>
                 <Typography variant="h4" gutterBottom>
                     Register
                 </Typography>
