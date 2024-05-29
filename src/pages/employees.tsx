@@ -18,22 +18,39 @@ const Employees: React.FC = () => {
 
     return (
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, padding: 2}}>
-            {employees.map((employee) => (
-                <Card key={employee.employeeId} sx={{display: 'flex', width: '100%', maxWidth: 600}}>
-                    <Avatar sx={{width: 60, height: 60}}>
-                        <Icon>{employee.firstName.charAt(0).toUpperCase()}</Icon>
-                    </Avatar>
-                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                        <CardContent sx={{flex: '1 0 auto'}}>
+            {employees && employees.length && employees.map((employee) => (
+                <Card key={employee.employeeId}
+                      sx={{display: 'flex', width: '100%', maxWidth: 600, flexDirection: 'row'}}>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flexBasis: '20%',
+                        padding: 2,
+                        alignItems: 'center'
+                    }}>
+                        <Avatar
+                            sx={{width: 60, height: 60, bgcolor: employee.isActive ? 'success.main' : 'error.main'}}>
+                            <Icon>{employee.firstName.charAt(0).toUpperCase()}</Icon>
+                        </Avatar>
+                        <Typography variant="subtitle1" color={employee.isActive ? 'success.main' : 'error.main'}
+                                    component="div">
+                            {employee.isActive ? 'Active' : 'Inactive'}
+                        </Typography>
+                    </Box>
+
+                    <Box sx={{display: 'flex', flexDirection: 'column', flexBasis: '60%', padding: 2}}>
+                        <CardContent>
                             <Typography component="div" variant="h5">
                                 {employee.firstName} {employee.lastName} ({employee.department.name})
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
                                 Hire Date: {format(new Date(employee.hireDate), 'MMM d, yyyy')}
                             </Typography>
+
                         </CardContent>
                     </Box>
-                    <Box sx={{display: 'flex', alignItems: 'center', paddingRight: 2, ml: 'auto'}}>
+
+                    <Box sx={{display: 'flex', alignItems: 'center', paddingRight: 2, ml: 'auto', flexBasis: '20%'}}>
                         <Link href={`/employees/${employee.employeeId}`} passHref>
                             <Button variant="contained" color="success">
                                 View Details

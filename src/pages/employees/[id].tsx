@@ -2,6 +2,7 @@ import withAuth from '../../components/withAuth';
 import {useRouter} from 'next/router';
 import React, {useEffect, useState} from 'react';
 import {
+    assignDepartment,
     Department,
     DepartmentHistory,
     Employee,
@@ -58,8 +59,18 @@ const EmployeeDetails: React.FC = () => {
 
     const handleUpdate = async () => {
         if (employee && selectedDepartment !== null) {
-            await updateEmployee(employee.employeeId, {...employee, departmentId: selectedDepartment});
-            setIsChanged(false);
+            // Check if the department has changed
+            if (employee.departmentId !== selectedDepartment) {
+                const result = await assignDepartment(employee.employeeId, selectedDepartment);
+
+                if (result) {
+                    setEmployee(result);
+                    setDepartmentHistory(result.departmentHistories); // Update the department history state
+                    setIsChanged(false);
+                } else {
+                    console.error(`Failed to assign new department to the employee with ID: ${employee.employeeId}`);
+                }
+            }
         }
     };
 
@@ -72,14 +83,17 @@ const EmployeeDetails: React.FC = () => {
         const updatedEmployee = await updateEmployee(employee.employeeId, employee);
 
         if (!updatedEmployee) {
-            console.error(`Failed to update the employee with ID: ${id}`);
+            console.error(`Failed to update the employee with ID: ${employee.employeeId}`);
             return;
         }
 
-        if (employee.isActive) {
-            console.log(`Employee with ID: ${id} is now active`);
+        // Update the state with the new employee data
+        setEmployee(updatedEmployee);
+
+        if (updatedEmployee.isActive) {
+            console.log(`Employee with ID: ${employee.employeeId} is now active`);
         } else {
-            console.log(`Employee with ID: ${id} is now not active`);
+            console.log(`Employee with ID: ${employee.employeeId} is now not active`);
         }
     };
 
@@ -104,12 +118,11 @@ const EmployeeDetails: React.FC = () => {
                     padding: 2
                 }}>
                     <Avatar sx={{width: 150, height: 150, bgcolor: employee.isActive ? 'success.main' : 'error.main'}}>
-                        <Icon sx={{fontSize: 60}}>{employee.isActive ? 'check_circle' : 'highlight_off'}</Icon>
+                        <Icon sx={{fontSize: 60}}>{employee.firstName.charAt(0).toUpperCase()}</Icon>
                     </Avatar>
                     <Typography color={employee.isActive ? 'success' : 'error'}>
                         {employee.isActive ? 'Active' : 'Inactive'}
                     </Typography>
-
                 </Box>
                 <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, padding: 2}}>
                     <Typography component="div" variant="h5">

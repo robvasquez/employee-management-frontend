@@ -113,3 +113,18 @@ export const getAllDepartments = async (): Promise<Department[]> => {
         return [];
     }
 };
+
+export const assignDepartment = async (employeeId: number, newDepartmentId: number): Promise<Employee | null> => {
+    try {
+        const headers = await getAuthHeader();
+        const payload = {
+            employeeId,
+            newDepartmentId
+        };
+        const response = await axios.post(`${API_URL}/Employee/assign-department`, payload, {headers});
+        return response.data;
+    } catch (error) {
+        console.error(`Error assigning department for employee with id ${employeeId}:`, error);
+        return null;
+    }
+};
