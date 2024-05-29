@@ -1,33 +1,22 @@
+// pages/auth/login.tsx
 import {useState} from 'react';
-import {signIn} from 'next-auth/react';
 import {useRouter} from 'next/router';
 import {Box, Button, Container, TextField, Typography} from '@mui/material';
+import {useAuth} from '../../hooks/useAuth';
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const {login} = useAuth();
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
-            const result = await signIn('credentials', {
-                redirect: false,
-                username,
-                password
-            });
-
-            console.log('signIn result:', result);
-
-            if (result?.ok) {
-                router.push('/employees');
-            } else {
-                console.error('Login failed');
-                setError('Invalid username or password');
-            }
-        } catch (e) {
-            console.error('Login error:', e);
+            await login(username, password);
+        } catch (error) {
+            setError('Login failed');
         }
     };
 

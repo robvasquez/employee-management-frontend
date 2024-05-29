@@ -1,20 +1,20 @@
+// pages/auth/register.tsx
 import {useState} from 'react';
-import {useRouter} from 'next/router';
-import {register} from '../../services/authService';
 import {Box, Button, Container, TextField, Typography} from '@mui/material';
+import {useAuth} from '../../hooks/useAuth';
 
 export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
+    const [error, setError] = useState('');
+    const {register} = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
             await register(username, password);
-            router.push('/auth/login');
         } catch (error) {
-            console.error('Registration failed', error);
+            setError('Registration failed');
         }
     };
 
@@ -24,6 +24,7 @@ export default function Register() {
                 <Typography variant="h4" gutterBottom>
                     Register
                 </Typography>
+                {error && <Typography color="error">{error}</Typography>}
                 <form onSubmit={handleSubmit}>
                     <TextField
                         label="Username"
